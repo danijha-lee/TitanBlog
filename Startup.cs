@@ -41,7 +41,10 @@ namespace TitanBlog
             services.AddControllersWithViews();
 
             services.AddRazorPages();
+            //register the BasicSlugService class as a service
             services.AddScoped<BasicSlugService>();
+            //REGISTER THE sEEDsERVICE as a transient
+            services.AddTransient<BasicSeedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
