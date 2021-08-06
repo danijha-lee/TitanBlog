@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TitanBlog.Data;
 using TitanBlog.Models;
+using TitanBlog.Services.Interfaces;
 
 namespace TitanBlog.Controllers
 {
@@ -15,9 +16,12 @@ namespace TitanBlog.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public BlogsController(ApplicationDbContext context)
+        private readonly IImageService _imageService;
+
+        public BlogsController(ApplicationDbContext context, IImageService imageService)
         {
             _context = context;
+            _imageService = imageService;
         }
 
         // GET: Blogs
@@ -56,10 +60,13 @@ namespace TitanBlog.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Created,Updated,ImageType,ImageData")] Blog blog)
+        public async Task<IActionResult> Create([Bind("Name,Description,Image")] Blog blog)
         {
             if (ModelState.IsValid)
             {
+                blog.ImageType = _imageService.ContentType(blog.Image);
+                blog.ImageData = await _imageService.EncodeImageAsync(blog.Image);
+
                 blog.Created = DateTime.Now;
                 _context.Add(blog);
                 await _context.SaveChangesAsync();

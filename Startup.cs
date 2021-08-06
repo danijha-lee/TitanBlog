@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using TitanBlog.Data;
 using TitanBlog.Models;
 using TitanBlog.Services;
+using TitanBlog.Services.Interfaces;
 
 namespace TitanBlog
 {
@@ -45,6 +46,9 @@ namespace TitanBlog
             services.AddScoped<BasicSlugService>();
             //REGISTER THE sEEDsERVICE as a transient
             services.AddTransient<BasicSeedService>();
+
+            //register the concrete Basic ImageService class to be used with the IImageService Interface
+            services.AddTransient<IImageService,  BasicImageService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

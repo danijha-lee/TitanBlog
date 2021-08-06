@@ -31,8 +31,9 @@ namespace TitanBlog.Models
         [Display(Name = "Updated Date")]
         public DateTime? Updated { get; set; }
 
-      
-
+      [Display(Name ="Select Image")]
+      [NotMapped]
+        public IFormFile Image { get; set; }
         public string ImageType { get; set; }
 
         public byte[] ImageData { get; set; }
