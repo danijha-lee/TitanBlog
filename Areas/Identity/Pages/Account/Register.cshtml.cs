@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using TitanBlog.Models;
+using TitanBlog.Services.Interfaces;
 
 namespace TitanBlog.Areas.Identity.Pages.Account
 {
@@ -24,17 +25,19 @@ namespace TitanBlog.Areas.Identity.Pages.Account
         private readonly UserManager<BlogUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IImageService _imageService;
 
         public RegisterModel(
             UserManager<BlogUser> userManager,
             SignInManager<BlogUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender, IImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _imageService = imageService;
         }
 
         [BindProperty]
@@ -101,6 +104,7 @@ namespace TitanBlog.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     DisplayName = Input.DisplayName,
                     UserName = Input.Email, 
+
                     
                    Email = Input.Email 
                 };
