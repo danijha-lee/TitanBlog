@@ -1,16 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TitanBlog.Data;
 using TitanBlog.Models;
 using TitanBlog.Services;
@@ -33,22 +34,31 @@ namespace TitanBlog
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddIdentity<BlogUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddDefaultTokenProviders()
-                .AddDefaultUI()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
+               .AddDefaultUI()
+               .AddDefaultTokenProviders()
+               .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddControllersWithViews();
             services.AddRazorPages();
-            //register the BasicSlugService class as a service
+
+            //Register the BasicSlugService class as a service
             services.AddScoped<BasicSlugService>();
-            //REGISTER THE sEEDsERVICE as a transient
+
+            //Register the SeedService as a Transient
             services.AddTransient<BasicSeedService>();
 
-            //register the concrete Basic ImageService class to be used with the IImageService Interface
-            services.AddTransient<IImageService,  BasicImageService>();
+            //Register the concrete BasicImageService
+            //class to be used with the IImageService
+            //Interface            
+            services.AddTransient<IImageService, BasicImageService>();
+
+            //Registering the GmailSmtpService concrete class to be used when IEmailSender is injected
+            services.AddTransient<IEmailSender, GmailSmtpService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +85,13 @@ namespace TitanBlog
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                   name: "SlugRoute",
+                   pattern: "BlogPosts/UrlFriendly/{slug}",
+                   defaults: new {Controller = "Posts", action = "Details"}
+                   );
+                endpoints.MapRazorPages();
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

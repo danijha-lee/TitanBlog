@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace TitanBlog.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        #region Class Members
         private readonly SignInManager<BlogUser> _signInManager;
         private readonly UserManager<BlogUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
@@ -31,7 +33,8 @@ namespace TitanBlog.Areas.Identity.Pages.Account
             UserManager<BlogUser> userManager,
             SignInManager<BlogUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender, IImageService imageService)
+            IEmailSender emailSender,
+            IImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -40,33 +43,33 @@ namespace TitanBlog.Areas.Identity.Pages.Account
             _imageService = imageService;
         }
 
+        #endregion
+
+
+        #region Properties
         [BindProperty]
         public InputModel Input { get; set; }
 
         public string ReturnUrl { get; set; }
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        //Model
+        #endregion
 
         public class InputModel
         {
             [Required]
-            [Display(Name ="First Name")]
+            [Display(Name = "First Name")]
             [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             public string FirstName { get; set; }
-
 
             [Required]
             [Display(Name = "Last Name")]
             [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             public string LastName { get; set; }
 
-            
-            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 5)]
             [Display(Name = "Display Name")]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
             public string DisplayName { get; set; }
-
 
             [Required]
             [EmailAddress]
@@ -83,9 +86,11 @@ namespace TitanBlog.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-        }
 
-        //Controller Starts Here
+            [Display(Name = "Select a custom image")]
+            public IFormFile Image { get; set; }
+
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -99,16 +104,26 @@ namespace TitanBlog.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new BlogUser {
+                var user = new BlogUser
+                {
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
                     DisplayName = Input.DisplayName,
-                    UserName = Input.Email, 
-
-                    
-                   Email = Input.Email 
+                    UserName = Input.Email,
+                    Email = Input.Email,
+                    ImageData = await _imageService.EncodeImageAsync("defaultUser.png"),
+                    ImageType = "png"
                 };
+
+                //If and only if the new user has seelcted a custom image will we use it
+                if (Input.Image != null)
+                {
+                    user.ImageData = await _imageService.EncodeImageAsync(Input.Image);
+                    user.ImageType = _imageService.ContentType(Input.Image);
+                }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
@@ -121,8 +136,14 @@ namespace TitanBlog.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = user.Id, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    var emailBody = new StringBuilder();
+                    emailBody.AppendLine("<span style='font-weight: bolder; border: 2px solid black;'>Thank you for registering...</span>");
+                    emailBody.AppendLine($"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here </a>.");
+                    emailBody.AppendLine("<br /><br /><hr>");
+                    emailBody.AppendLine("Thank you,");
+                    emailBody.AppendLine("   Titan Blog Team!");
+
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", emailBody.ToString());
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

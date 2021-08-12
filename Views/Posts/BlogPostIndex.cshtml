@@ -1,0 +1,109 @@
+﻿@using TitanBlog.Services.Interfaces;
+@model IEnumerable<TitanBlog.Models.Post>
+@inject IImageService imageService
+
+<main class="blog-standard">
+    <div class="container">
+        <h1 class="oleez-page-title wow fadeInUp">Blog Standard</h1>
+        <div class="row">
+            <div class="col-md-8">
+                @foreach (var post in Model)
+                {
+
+                    <article class="blog-post wow fadeInUp">
+                        <img src="@imageService.DecodeImage(post.ImageData, post.ImageType)" alt="blog post" class="post-thumbnail">
+                        <p class="post-date">@post.Created.ToString("MM/dd/yyyy")</p>
+                        <h4 class="post-title">@post.Title</h4>
+                        <p class="post-excerpt">@post.Abstract</p>
+                        <a asp-action="Details" asp-controller="Posts" asp-route-slug="@post.Slug" class="post-permalink">Read Post</a>
+                    </article>
+                }
+                <nav class="oleez-pagination wow fadeInUp">
+                    <a href="#!" class="active">01</a>
+                    <a href="#!">02</a>
+                    <a href="#!">03</a>
+                    <a href="#!" class="next">&rarr;</a>
+                </nav>
+            </div>
+            <div class="col-md-4">
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Tags</h5>
+                    <div class="widget-content">
+                        <a href="#!" class="post-tag">Design Studio</a>
+                        <a href="#!" class="post-tag">Creative Design</a>
+                        <a href="#!" class="post-tag">Marketing</a>
+                        <a href="#!" class="post-tag">Typography</a>
+                        <a href="#!" class="post-tag">Team</a>
+                        <a href="#!" class="post-tag">Project</a>
+                    </div>
+                </div>
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Share</h5>
+                    <div class="widget-content">
+                        <nav class="social-links">
+                            <a href="#!">Fb</a>
+                            <a href="#!">Tw</a>
+                            <a href="#!">In</a>
+                            <a href="#!">Be</a>
+                        </nav>
+                    </div>
+                </div>
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Gallery</h5>
+                    <div class="widget-content">
+                        <div class="gallery">
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="sidebar-widget wow fadeInUp">
+                    <h5 class="widget-title">Categories</h5>
+                    <div class="widget-content">
+                        <ul class="category-list">
+                            <li><a href="#!">Animation</a></li>
+                            <li><a href="#!">Branding</a></li>
+                            <li><a href="#!">Graphic Design</a></li>
+                            <li><a href="#!">Photography</a></li>
+                            <li><a href="#!">Web Developing</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

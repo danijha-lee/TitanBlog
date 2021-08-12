@@ -1,5 +1,6 @@
-﻿@model IEnumerable<TitanBlog.Models.Post>
-
+﻿@using TitanBlog.Services.Interfaces
+@model IEnumerable<TitanBlog.Models.Post>
+@inject IImageService imageService
 @{
     ViewData["Title"] = "Index";
 }
@@ -12,6 +13,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+               image
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.AuthorId)
             </th>
@@ -45,6 +49,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                <img src="@imageService.DecodeImage(item.ImageData, item.ImageType)" class="img-fluid" />
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.AuthorId)
             </td>
             <td>
@@ -71,7 +78,7 @@
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Details" asp-route-slug="@item.Slug">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>

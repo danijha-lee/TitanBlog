@@ -10,5 +10,6 @@ namespace TitanBlog.Services
         string DecodeImage(byte[] data, string type);
         string ContentType(IFormFile image);
         int Size(IFormFile image);
+        bool IsValidType(IFormFile image);
     }
 }
