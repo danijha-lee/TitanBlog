@@ -1,8 +1,152 @@
-﻿@{
+﻿@using TitanBlog.Services.Interfaces
+@model IEnumerable<Blog>
+@inject IImageService imageService 
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<section>
+    <div class="container wow fadeIn">
+        <div id="oleezLandingCarousel" class="oleez-landing-carousel carousel slide" data-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active">
+                    <img src="~/img/Banner_12x.jpg" alt="First slide" class="w-100">
+                    <div class="carousel-caption">
+                        <h2 data-animation="animated fadeInRight"><span>Remarkable</span></h2>
+                        <h2 data-animation="animated fadeInRight"><span>Digital agency</span></h2>
+                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight">EXPLORE PROJECT</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="~/img/Banner_22x.jpg" alt="Second slide" class="w-100">
+                    <div class="carousel-caption">
+                        <h2 data-animation="animated fadeInRight"><span>Remarkable</span></h2>
+                        <h2 data-animation="animated fadeInRight"><span>Digital agency</span></h2>
+                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight">EXPLORE PROJECT</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="~/img/Banner_32x.jpg" alt="Third slide" class="w-100">
+                    <div class="carousel-caption">
+                        <h2 data-animation="animated fadeInRight"><span>Remarkable</span></h2>
+                        <h2 data-animation="animated fadeInRight"><span>Digital agency</span></h2>
+                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight">EXPLORE PROJECT</a>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="~/img/Banner_42x.jpg" alt="Fourth slide" class="w-100">
+                    <div class="carousel-caption">
+                        <h2 data-animation="animated fadeInRight"><span>Remarkable</span></h2>
+                        <h2 data-animation="animated fadeInRight"><span>Digital agency</span></h2>
+                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight">EXPLORE PROJECT</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="oleez-landing-section oleez-landing-section-about blog-grid-page">
+    <div class="container">
+        <div class="oleez-landing-section-content">
+            <div class="oleez-landing-section-verticals wow fadeIn">
+                <span class="number">01</span> <img src="~/img/Logo_2.svg" alt="ollez" height="12">
+            </div>
+            <div class="row landing-about-content wow fadeInUp">
+                <div class="col-md-6">
+                    <h2>We help and solve your business problem.</h2>
+                </div>
+                <div class="col-md-6">
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio corporis delectus dolorem possimus, dolor rerum.</p>
+                </div>
+            </div>
+           
+                <div class="row">
+                    @foreach (var blog in Model)
+                    {
+
+
+                        <div class="col-md-4">
+                            <div class="blog-post-card wow fadeInUp">
+                                <div class="blog-post-thumbnail-wrapper">
+                                    <img src="@imageService.DecodeImage(blog.ImageData, blog.ImageType)" alt="blog">
+                                </div>
+                                <p class="blog-post-date">@blog.Created.ToString("MMM/dd/yyyy")</p>
+                                <a asp-controller="Posts" asp-action="BlogPostIndex" asp-route-blogId="@blog.Id">
+                                <h5 class="blog-post-title">@blog.Name</h5>
+                                </a>
+                            </div>
+                        </div>
+                    }
+               
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oleez-landing-section oleez-landing-section-news">
+    <div class="container">
+        <div class="oleez-landing-section-content">
+            <div class="oleez-landing-section-verticals wow fadeIn">
+                <span class="number">02</span> <img src="~/img/Logo_2.svg" alt="ollez" height="12">
+            </div>
+            <h2 class="section-title wow fadeInUp">Recent News & Stories.</h2>
+            <p class="news-section-subtitle wow fadeInUp">Share your stories and news with everyone.</p>
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="news-card news-card-1 wow fadeInUp">
+                        <div class="card-body">
+                            <div class="author-info media">
+                                <img src="~/img/Team_1_Copy_22x.jpg" alt="author" class="author-avatar">
+                                <div class="media-body">
+                                    <h6 class="author-name">Posted by Colabrio</h6>
+                                    <p class="news-post-date">July 5, 2019</p>
+                                </div>
+                            </div>
+                            <div class="post-meta">
+                                <span class="post-category">Digital Strategy</span> 4 min read
+                            </div>
+                            <h5 class="post-title">The Ultimate Guide to Make Your WordPress Journal.</h5>
+                            <a href="#!" class="post-permalink">Read more </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="news-card news-card-2 wow fadeInUp">
+                        <div class="card-body">
+                            <div class="author-info media">
+                                <img src="~/img/Team_2_Copy_22x.jpg" alt="author" class="author-avatar">
+                                <div class="media-body">
+                                    <h6 class="author-name">Posted by Stormie</h6>
+                                    <p class="news-post-date">July 5, 2019</p>
+                                </div>
+                            </div>
+                            <div class="post-meta">
+                                <span class="post-category">Personal</span> 4 min read
+                            </div>
+                            <h5 class="post-title">The Highly Contemporary UI/UX Design from a london.</h5>
+                            <a href="#!" class="post-permalink">Read more </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <div class="news-card news-card-3 wow fadeInUp">
+                        <div class="card-body">
+                            <div class="author-info media">
+                                <img src="~/img/Team_3_Copy_22x.jpg" alt="author" class="author-avatar">
+                                <div class="media-body">
+                                    <h6 class="author-name">Posted by Angela</h6>
+                                    <p class="news-post-date">July 5, 2019</p>
+                                </div>
+                            </div>
+                            <div class="post-meta">
+                                <span class="post-category">Personal</span> 4 min read
+                            </div>
+                            <h5 class="post-title">A Color Exercise for our Brand’s Illustration </h5>
+                            <a href="#!" class="post-permalink">Read more </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
