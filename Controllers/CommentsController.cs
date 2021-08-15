@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +41,49 @@ namespace TitanBlog.Controllers
         {
             var comments = await _context.Comments.Where(c => c.Deleted != null).ToListAsync();
             return View("Index", comments);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Moderate(int id, [Bind("Id,ModeratedBody,ModerationReason")] Comment comment, string slug)
+        {
+            if (id != comment.Id)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                //I have trimmed down the bind to only include new data and Id
+                //I have also manually updated two additional properties
+                comment.Moderated = DateTime.Now;
+                comment.ModeratorId = _userManager.GetUserId(User);
+
+                //By saying Comments.Attach I am basically performing a property by property update
+                _context.Comments.Attach(comment);
+
+                //If I want a property to be updated I will have to say so...once for each of the 4 props
+                //BOOM! No more loading up the form with information just to prevent losing it!
+                _context.Entry(comment).Property(x => x.ModeratedBody).IsModified = true;
+                _context.Entry(comment).Property(x => x.ModerationReason).IsModified = true;
+                _context.Entry(comment).Property(x => x.Moderated).IsModified = true;
+                _context.Entry(comment).Property(x => x.ModeratorId).IsModified = true;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CommentExists(comment.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return RedirectToAction("Details", "Posts", new { slug }, "postComments");
         }
 
         // GET: Comments
@@ -167,6 +209,39 @@ namespace TitanBlog.Controllers
             }
 
             return View(comment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SoftDelete([Bind("Id,PostId,AuthorId,Body")] Comment comment, string slug)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    comment.Deleted = DateTime.Now;
+
+                    comment.ModeratedBody = "This Comment has been Deleted.";
+
+                    _context.Update(comment);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!CommentExists(comment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Details", "Posts", new { slug }, "postComments");
+            }
+            ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
+            ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Abstract", comment.PostId);
+            return RedirectToAction("Details", "Posts", new { slug }, "postComments");
         }
 
         // POST: Comments/Delete/5

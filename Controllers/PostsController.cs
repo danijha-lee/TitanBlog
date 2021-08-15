@@ -73,7 +73,7 @@ namespace TitanBlog.Controllers
             }
 
             var post = await _context.Posts
-                .Include(p => p.Blog).Include(p => p.Comments)
+                .Include(p => p.Blog).Include(p => p.Comments.Where(p => p.Deleted == null))
                 .ThenInclude(c => c.Author)
                 .FirstOrDefaultAsync(p => p.Slug == slug);
 
