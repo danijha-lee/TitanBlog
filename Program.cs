@@ -24,11 +24,9 @@ namespace TitanBlog
                                    .ServiceProvider
                                    .GetRequiredService<BasicSeedService>();
 
-            await seedService.SeedDataAsync();
+            await seedService.ManageDataAsync();
 
             host.Run();
-
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

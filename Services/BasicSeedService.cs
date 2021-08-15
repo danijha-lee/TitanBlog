@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TitanBlog.Data;
 using TitanBlog.Models;
 
@@ -19,6 +20,12 @@ namespace TitanBlog.Services
             _context = context;
             _roleManager = roleManager;
             _userManager = userManager;
+        }
+
+        public async Task ManageDataAsync()
+        {
+            await _context.Database.MigrateAsync();
+            await SeedDataAsync();
         }
 
         //This is a wrapper method
@@ -38,7 +45,6 @@ namespace TitanBlog.Services
             // Task 2: create the necessary Roles if they don't already exist
             await _roleManager.CreateAsync(new IdentityRole("Administrator"));
             await _roleManager.CreateAsync(new IdentityRole("Moderator"));
-
         }
 
         private async Task SeedUsersAsync()
