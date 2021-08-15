@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TitanBlog.Classes;
 using TitanBlog.Data;
 using TitanBlog.Models;
 using TitanBlog.Services;
@@ -33,7 +34,7 @@ namespace TitanBlog
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                   Connection.GetConnectionString(Configuration)));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -53,12 +54,13 @@ namespace TitanBlog
 
             //Register the concrete BasicImageService
             //class to be used with the IImageService
-            //Interface            
+            //Interface
             services.AddTransient<IImageService, BasicImageService>();
 
             //Registering the GmailSmtpService concrete class to be used when IEmailSender is injected
             services.AddTransient<IEmailSender, GmailSmtpService>();
-
+            //Register our Search Service
+            services.AddTransient<SearchService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,7 +90,7 @@ namespace TitanBlog
                 endpoints.MapControllerRoute(
                    name: "SlugRoute",
                    pattern: "BlogPosts/UrlFriendly/{slug}",
-                   defaults: new {Controller = "Posts", action = "Details"}
+                   defaults: new { Controller = "Posts", action = "Details" }
                    );
                 endpoints.MapRazorPages();
 

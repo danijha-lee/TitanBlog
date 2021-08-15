@@ -13,6 +13,7 @@ namespace TitanBlog.Services
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<BlogUser> _userManager;
+
         public BasicSeedService(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<BlogUser> userManager)
         {
             _context = context;
@@ -20,13 +21,14 @@ namespace TitanBlog.Services
             _userManager = userManager;
         }
 
-        //This is a wrapper method 
+        //This is a wrapper method
         public async Task SeedDataAsync()
         {
             await SeedRolesAsync();
             await SeedUsersAsync();
         }
-        private async Task SeedRolesAsync() 
+
+        private async Task SeedRolesAsync()
         {
             //Task 1: Ask the Database if any Roles already exist
             if (_context.Roles.Any())
@@ -35,7 +37,8 @@ namespace TitanBlog.Services
             }
             // Task 2: create the necessary Roles if they don't already exist
             await _roleManager.CreateAsync(new IdentityRole("Administrator"));
-           
+            await _roleManager.CreateAsync(new IdentityRole("Moderator"));
+
         }
 
         private async Task SeedUsersAsync()
@@ -52,13 +55,25 @@ namespace TitanBlog.Services
                 LastName = "Lee",
                 DisplayName = "MonaeLee",
                 PhoneNumber = "3364948074",
-                EmailConfirmed = true
-
+                EmailConfirmed = true,
             };
+
             await _userManager.CreateAsync(adminUser, "Prettyface669!");
             await _userManager.AddToRoleAsync(adminUser, "Administrator");
+
+            var modUser = new BlogUser()
+            {
+                Email = "themonaelee@gmail.com",
+                UserName = "themonaelee@gmail.com",
+                FirstName = "Moderator (Monae)",
+                LastName = "Lee",
+                DisplayName = "Moderator",
+                PhoneNumber = "3364948074",
+                EmailConfirmed = true
+            };
+
+            await _userManager.CreateAsync(modUser, "Prettyface669!");
+            await _userManager.AddToRoleAsync(modUser, "Moderator");
         }
     }
-
-   
 }
