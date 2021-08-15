@@ -1,4 +1,5 @@
 ﻿@using TitanBlog.Services.Interfaces
+@using TitanBlog.Enums
 @model TitanBlog.Models.Post
 @inject IImageService imageService
 
@@ -8,42 +9,110 @@
 
 <main class="blog-post-single">
     <div class="container">
-        <h1 class="post-title wow fadeInUp">Blog Standard</h1>
-        <div class="row">
-            <div class="col-md-8 blog-post-wrapper">
-                <div class="post-header wow fadeInUp">
-                    <img src="@imageService.DecodeImage(Model.ImageData, Model.ImageType)" alt="blog post" class="post-featured-image">
-                    <p class="post-date">@Model.Created.ToString("MM/dd/yyyy")</p>
-                </div>
-                <div class="post-content wow fadeInUp">
-                    @Html.Raw(Model.Content)
-                </div>
-                <div class="post-tags wow fadeInUp">
-                    <a href="#!" class="post-tag">Design Studio</a>
-                    <a href="#!" class="post-tag">Creative Design</a>
-                </div>
-                @* <div class="post-navigation wow fadeInUp">
-                        <button class="btn prev-post"> Prev Post</button>
-                        <button class="btn next-post"> Next Post</button>
-                    </div>*@
-                <div class="comment-section wow fadeInUp">
-                    <div class="comments-list" id="postComments">
-                        <h2 class="text-heading">Comments <strong>(@Model.Comments.Count)</strong></h2>
-                        @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
-                        {
+        <div class="blog-post-single">
+            <h1 class="post-title wow fadeInUp">Blog Standard</h1>
+            <div class="row">
+                <div class="col-md-8 blog-post-wrapper">
+                    <div class="post-header wow fadeInUp">
+                        <img src="@imageService.DecodeImage(Model.ImageData, Model.ImageType)" alt="blog post" class="post-featured-image">
+                        <p class="post-date">@Model.Created.ToString("MMM dd, yyyy")</p>
+                    </div>
+                    <div class="post-content wow fadeInUp">
+                        <blockquote class="blockquote wow fadeInUp">
+                            <p>@Model.Abstract</p>
+                        </blockquote>
+                        <p>@Html.Raw(Model.Content)</p>
+                    </div>
+                    <div class="post-tags wow fadeInUp">
+                        <a href="#!" class="post-tag">Design Studio</a>
+                        <a href="#!" class="post-tag">Creative Design</a>
+                    </div>
+                    @* <div class="post-navigation wow fadeInUp">
+                            @if (Model.PrevPost is not null)
+                            {
+                                <a class="btn prev-post" asp-action="Details" asp-controller="Posts" asp-route-slug="@Model.PrevPost.Slug"> Prev Post</a>
+                            }
+                            else
+                            {
+                                <span>Start</span>
+                            }
 
-                            <div class="comment">
-                                <div class="comment-info">
-                                    <img src="@imageService.DecodeImage(comment.Author.ImageData, comment.Author.ImageType)" alt="@comment.Author.DisplayName" class="img-comment rounded-circle">
+                            @if (Model.NextPost is not null)
+                            {
+                                <a class="btn next-post" asp-action="Details" asp-controller="Posts" asp-route-slug="@Model.NextPost.Slug"> Next Post</a>
 
-                                    <span class="author">by @comment.Author.DisplayName</span>
-                                    <span class="date">@comment.Created.ToString("MM dd, yyyy")</span>
-                                </div>
-                                <div class="comment-content">
-                                    <p>@comment.Body</p>
-                                </div>
-                            </div>}
+                            }
+                            else
+                            {
+                                <span>End</span>
+                            }
+                        </div>*@
+                    <div class="comment-section wow fadeInUp">
+                        <div class="comments-list" id="postComments">
+                            <h2 class="text-heading">Comments <strong>(@Model.Comments.Count)</strong></h2>
+                            @foreach (var comment in Model.Comments.OrderByDescending(c => c.Created))
+                            {
+                                if (comment.Moderated != null)
+                                {
+                                    <div class="comment">
+                                        <div class="comment-info">
+                                            <img src="@imageService.DecodeImage(comment.Author.ImageData, comment.Author.ImageType)" alt="@comment.Author.DisplayName" class="img-comment rounded-circle">
+                                            <span class="author">by <a href="#">@comment.Author.DisplayName</a></span>
+                                            <span class="date">@comment.Created.ToString("MMM dd, yyyy")</span><br />
+                                            <span class="author">Moderated by <a href="#">@comment.Moderator.DisplayName</a></span>
+                                            <span class="date">@comment.Moderated?.ToString("MMM dd, yyy")</span><br />
+                                            <span>Reason: @comment.ModerationReason</span><br />
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>@comment.ModeratedBody</p>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="comment">
+                                        <div class="comment-info">
+                                            <img src="@imageService.DecodeImage(comment.Author.ImageData, comment.Author.ImageType)" alt="@comment.Author.DisplayName" class="img-comment rounded-circle">
+                                            <span class="author">by <a href="#">@comment.Author.DisplayName</a></span>
 
+                                            <span class="date">@comment.Created.ToString("MMM dd, yyyy")</span>
+                                        </div>
+                                        <div class="comment-content">
+                                            <p>@comment.Body</p>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (User.IsInRole("Moderator") || User.IsInRole("Administrator"))
+                                {
+                                    <hr />
+                                    <div class="row">
+                                        <div class="col">
+                                            <form>
+                                                @*<input type="hidden" value="@comment.Id" id="commentId" disabled />
+                                                    <input type="hidden" value="@comment.Body" id="commentBody" disabled />*@
+                                                <button type="button" data-id="@comment.Id" data-slug="@Model.Slug" data-commentBody="@comment.Body" id="moderateBtn" class="btn btn-dark btn-sm btn-block moderateBtn">Moderate</button>
+                                            </form>
+                                        </div>
+                                        <div class="col">
+
+                                            <form asp-action="SoftDelete" asp-controller="Comments">
+                                                <input type="hidden" asp-for="@comment.Id" />
+                                                <input type="hidden" asp-for="@comment.Body" />
+                                                <input type="hidden" name="Slug" id="Slug" value="@Model.Slug" />
+                                                <input type="hidden" asp-for="@comment.Created" />
+                                                <input type="hidden" asp-for="@comment.PostId" />
+                                                <input type="hidden" asp-for="@comment.AuthorId" />
+
+                                                <button type="submit" class="btn btn-danger btn-outline-dark btn-sm btn-block">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                }
+
+                            }
+                        </div>
                         <h5 class="section-title" id="newComment">Leave a Comment</h5>
 
                         @if (User.Identity.IsAuthenticated)
@@ -63,95 +132,161 @@
                                         <button type="submit" class="btn btn-submit">Send</button>
                                     </div>
                                 </div>
-                            </form> }
+                            </form>
+                        }
                         else
                         {
                             <h5>
                                 You must <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Details", "Posts", new { slug=Model.Slug})" asp-fragment="newComment">login</a> to create a comment.
-                            </h5>}
+                            </h5>
+                        }
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="sidebar-widget wow fadeInUp">
-                    <h5 class="widget-title">Tags</h5>
-                    <div class="widget-content">
-                        <a href="#!" class="post-tag">Design Studio</a>
-                        <a href="#!" class="post-tag">Creative Design</a>
-                        <a href="#!" class="post-tag">Marketing</a>
-                        <a href="#!" class="post-tag">Typography</a>
-                        <a href="#!" class="post-tag">Team</a>
-                        <a href="#!" class="post-tag">Project</a>
-                    </div>
-                </div>
-                <div class="sidebar-widget wow fadeInUp">
-                    <h5 class="widget-title">Share</h5>
-                    <div class="widget-content">
-                        <nav class="social-links">
-                            <a href="#!">Fb</a>
-                            <a href="#!">Tw</a>
-                            <a href="#!">In</a>
-                            <a href="#!">Be</a>
-                        </nav>
-                    </div>
-                </div>
-                <div class="sidebar-widget wow fadeInUp">
-                    <h5 class="widget-title">Gallery</h5>
-                    <div class="widget-content">
-                        <div class="gallery">
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
+                <div class="col-md-4">
+                    <div class="sidebar-widget wow fadeInUp">
+                        <h5 class="widget-title">Tags</h5>
+                        <div class="widget-content">
+                            <a href="#!" class="post-tag">Design Studio</a>
+                            <a href="#!" class="post-tag">Creative Design</a>
+                            <a href="#!" class="post-tag">Marketing</a>
+                            <a href="#!" class="post-tag">Typography</a>
+                            <a href="#!" class="post-tag">Team</a>
+                            <a href="#!" class="post-tag">Project</a>
                         </div>
                     </div>
-                </div>
-                <div class="sidebar-widget wow fadeInUp">
-                    <h5 class="widget-title">Categories</h5>
-                    <div class="widget-content">
-                        <ul class="category-list">
-                            <li><a href="#!">Animation</a></li>
-                            <li><a href="#!">Branding</a></li>
-                            <li><a href="#!">Graphic Design</a></li>
-                            <li><a href="#!">Photography</a></li>
-                            <li><a href="#!">Web Developing</a></li>
-                        </ul>
+                    @*<div class="sidebar-widget wow fadeInUp">
+                            <h5 class="widget-title">Share</h5>
+                            <div class="widget-content">
+                                <nav class="social-links">
+                                    <a href="#!">Fb</a>
+                                    <a href="#!">Tw</a>
+                                    <a href="#!">In</a>
+                                    <a href="#!">Be</a>
+                                </nav>
+                            </div>
+                        </div>*@
+                    <div class="sidebar-widget wow fadeInUp">
+                        <h5 class="widget-title">Gallery</h5>
+                        <div class="widget-content">
+                            <div class="gallery">
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                                <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
+                                    <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                    @*<div class="sidebar-widget wow fadeInUp">
+                            <h5 class="widget-title">Categories</h5>
+                            <div class="widget-content">
+                                <ul class="category-list">
+                                    <li><a href="#!">Animation</a></li>
+                                    <li><a href="#!">Branding</a></li>
+                                    <li><a href="#!">Graphic Design</a></li>
+                                    <li><a href="#!">Photography</a></li>
+                                    <li><a href="#!">Web Developing</a></li>
+                                </ul>
+                            </div>
+                        </div>*@
                 </div>
             </div>
         </div>
     </div>
 </main>
+
+<!-- Modal -->
+<div class="modal fade" id="moderateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Moderate Comment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Moderate" asp-controller="Comments">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" name="Id" id="modCommentId">
+                    <input type="hidden" name="Slug" id="modCommentSlug">
+
+                    <div class="form-group">
+                        <label class="control-label"></label><span>Original Comment</span>
+                        <input id="modCommentBody" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label"></label><span>Moderated Comment</span>
+                        <input name="ModeratedBody" id="ModeratedBody" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label">Reason for Moderation</label>
+                        <select class="form-control" name="ModerationReason" id="ModerationReason" asp-items="@Html.GetEnumSelectList<ModerationType>()"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        let elements = document.querySelectorAll(".moderateBtn");
+
+        let popModal = function () {
+            document.getElementById("modCommentId").value = parseInt(this.getAttribute("data-id"));
+            document.getElementById("modCommentSlug").value = this.getAttribute("data-slug");
+            document.getElementById("modCommentBody").value = this.getAttribute("data-commentBody");
+
+            let modal = new bootstrap.Modal(document.getElementById("moderateModal"), {});
+            modal.show();
+        }
+
+        for (let i = 0; i < elements.length; i++) {
+            elements[i].addEventListener("click", popModal);
+        }
+    </script>
+
+}

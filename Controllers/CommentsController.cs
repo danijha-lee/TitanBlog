@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,13 +23,33 @@ namespace TitanBlog.Controllers
             _userManager = userManager;
         }
 
+        [Authorize(Roles = "Moderator")]
+        public async Task<IActionResult> UnmoderatedIndex()
+        {
+            var comments = await _context.Comments.Where(c => c.Moderated == null && c.Deleted == null).ToListAsync();
+            return View("Index", comments);
+        }
+
+        [Authorize(Roles = "Moderator")]
+        public async Task<IActionResult> ModeratedIndex()
+        {
+            var comments = await _context.Comments.Where(c => c.Moderated != null && c.Deleted == null).ToListAsync();
+            return View("Index", comments);
+        }
+
+        [Authorize(Roles = "Moderator")]
+        public async Task<IActionResult> DeletedIndex()
+        {
+            var comments = await _context.Comments.Where(c => c.Deleted != null).ToListAsync();
+            return View("Index", comments);
+        }
+
         // GET: Comments
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Comments.Include(c => c.Author).Include(c => c.Post);
             return View(await applicationDbContext.ToListAsync());
         }
-
 
         // GET: Comments/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -51,7 +72,6 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Comments/Create
-      
 
         // POST: Comments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -66,7 +86,7 @@ namespace TitanBlog.Controllers
                 comment.Created = DateTime.Now;
                 _context.Add(comment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Posts", new { slug} ,"postComments");
+                return RedirectToAction("Details", "Posts", new { slug }, "postComments");
             }
             ViewData["AuthorId"] = new SelectList(_context.Users, "Id", "Id", comment.AuthorId);
             ViewData["PostId"] = new SelectList(_context.Posts, "Id", "Title", comment.PostId);

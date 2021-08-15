@@ -18,12 +18,14 @@ namespace TitanBlog.Controllers
         private readonly ApplicationDbContext _context;
         private readonly BasicSlugService _slugService;
         private readonly IImageService _imageService;
+        private readonly SearchService _searchService;
 
-        public PostsController(ApplicationDbContext context, BasicSlugService slugService, IImageService imageService)
+        public PostsController(ApplicationDbContext context, BasicSlugService slugService, IImageService imageService, SearchService searchService)
         {
             _context = context;
             _slugService = slugService;
             _imageService = imageService;
+            _searchService = searchService;
         }
 
         // GET: Posts
@@ -46,6 +48,12 @@ namespace TitanBlog.Controllers
                 .ToListAsync();
 
             return View(posts);
+        }
+
+        public IActionResult SearchIndex(string searchStr)
+        {
+            var posts = _searchService.ContentSearch(searchStr);
+            return View("BlogPostIndex", posts);
         }
 
         [Authorize(Roles = "Administrator")]
@@ -73,8 +81,6 @@ namespace TitanBlog.Controllers
             {
                 return NotFound();
             }
-
-
 
             return View(post);
         }
@@ -189,7 +195,6 @@ namespace TitanBlog.Controllers
                         }
                     }
 
-
                     post.Updated = DateTime.Now;
 
                     _context.Update(post);
@@ -279,19 +284,14 @@ namespace TitanBlog.Controllers
 //        // GET: Posts
 //        public async Task<IActionResult> Index()
 //        {
-
 //            var applicationDbContext = _context.Posts.Where(p => p.IsReady);
 //            return View(await applicationDbContext.ToListAsync());
 //        }
 //        public async Task<IActionResult>  AdminIndex()
 //        {
-
 //            var applicationDbContext = _context.Posts.Include(p => p.Blog);
 //            return View("Index",await applicationDbContext.ToListAsync());
 //        }
-
-
-
 
 //        public async Task <IActionResult> BlogPostIndex(int? blogId)
 //        {
@@ -364,7 +364,6 @@ namespace TitanBlog.Controllers
 //                    return View(post);
 //                }
 
-
 //                post.Created = DateTime.Now;
 //                _context.Add(post);
 //                await _context.SaveChangesAsync();
@@ -433,9 +432,8 @@ namespace TitanBlog.Controllers
 //                        }
 //                    }
 
-
 //                    post.Updated = DateTime.Now;
-//                    //I need to compare the current slug to the previous 
+//                    //I need to compare the current slug to the previous
 //                    //Slug to determine if I have to check for uniqueness
 //                    _context.Update(post);
 //                    await _context.SaveChangesAsync();
@@ -493,6 +491,3 @@ namespace TitanBlog.Controllers
 //        }
 //    }
 //}
-
-
-

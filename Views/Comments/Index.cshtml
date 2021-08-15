@@ -19,13 +19,28 @@
                 @Html.DisplayNameFor(model => model.Updated)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Moderated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Deleted)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Body)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModeratedBody)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModerationReason)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Post)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Moderator)
             </th>
             <th></th>
         </tr>
@@ -40,13 +55,28 @@
                 @Html.DisplayFor(modelItem => item.Updated)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Moderated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Deleted)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModeratedBody)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModerationReason)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Post.Abstract)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Author.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Moderator.Id)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
