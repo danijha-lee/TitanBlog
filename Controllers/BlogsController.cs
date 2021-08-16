@@ -49,7 +49,7 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Blogs/Create
-        [Authorize(Roles="Administrator")]
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
@@ -75,6 +75,7 @@ namespace TitanBlog.Controllers
             return View(blog);
         }
 
+        [Authorize(Roles = "Administrator")]
         // GET: Blogs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -94,6 +95,7 @@ namespace TitanBlog.Controllers
         // POST: Blogs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Image,Description,Created,Updated,ImageType,ImageData")] Blog blog)
@@ -136,6 +138,7 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Blogs/Delete/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -154,6 +157,7 @@ namespace TitanBlog.Controllers
         }
 
         // POST: Blogs/Delete/5
+        [Authorize(Roles = "Administrator")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
