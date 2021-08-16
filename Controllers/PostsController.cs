@@ -65,6 +65,7 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Posts/Details/5
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Details(string slug)
         {
             if (string.IsNullOrEmpty(slug))
@@ -96,6 +97,7 @@ namespace TitanBlog.Controllers
         // POST: Posts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("BlogId,Title,Abstract,Content,Image,IsReady")] Post post)
@@ -152,6 +154,7 @@ namespace TitanBlog.Controllers
         // POST: Posts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,BlogId,Title,Abstract,Created,Content,Slug,IsReady,Image,ImageData,ImageType")] Post post)

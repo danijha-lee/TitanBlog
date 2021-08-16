@@ -21,7 +21,9 @@ namespace TitanBlog.Services
             var posts = _context.Posts.Where(p => p.IsReady);
             if (!string.IsNullOrEmpty(searchStr))
             {
-                posts = posts.Where(p => p.Title.Contains(searchStr) ||
+                searchStr = searchStr.ToLower();
+                posts = posts.Where(p =>
+                p.Title.Contains(searchStr) ||
                 p.Abstract.Contains(searchStr) ||
                 p.Content.Contains(searchStr) ||
                 p.Comments.Any(c =>
