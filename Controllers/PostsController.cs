@@ -13,6 +13,7 @@ using TitanBlog.Services.Interfaces;
 
 namespace TitanBlog.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class PostsController : Controller
     {
         private readonly ApplicationDbContext _context;

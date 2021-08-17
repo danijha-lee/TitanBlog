@@ -34,7 +34,7 @@ namespace TitanBlog.Controllers
             return View(await _context.Blogs.ToListAsync());
         }
 
-        public IActionResult Privacy()
+        public IActionResult About()
         {
             return View();
         }
@@ -43,9 +43,9 @@ namespace TitanBlog.Controllers
         {
             return View();
         }
-        [HttpPost]
 
-        public IActionResult ContactMe([Bind ("Name, Email, Subject, Message")] Contact contact)
+        [HttpPost]
+        public IActionResult ContactMe([Bind("Name, Email, Subject, Message")] Contact contact)
         {
             var emailTo = _configuration["MailSettings:Email"];
 
@@ -57,7 +57,6 @@ namespace TitanBlog.Controllers
 
             _emailSender.SendEmailAsync(emailTo, contact.Subject, emailBody.ToString());
             return RedirectToAction("Index", "Home");
-
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

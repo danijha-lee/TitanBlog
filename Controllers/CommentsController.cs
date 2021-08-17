@@ -11,6 +11,7 @@ using TitanBlog.Models;
 
 namespace TitanBlog.Controllers
 {
+    [Authorize(Roles = "Moderator, Administrator")]
     public class CommentsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,21 +23,18 @@ namespace TitanBlog.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> UnmoderatedIndex()
         {
             var comments = await _context.Comments.Where(c => c.Moderated == null && c.Deleted == null).ToListAsync();
             return View("Index", comments);
         }
 
-        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> ModeratedIndex()
         {
             var comments = await _context.Comments.Where(c => c.Moderated != null && c.Deleted == null).ToListAsync();
             return View("Index", comments);
         }
 
-        [Authorize(Roles = "Moderator")]
         public async Task<IActionResult> DeletedIndex()
         {
             var comments = await _context.Comments.Where(c => c.Deleted != null).ToListAsync();
@@ -112,7 +110,7 @@ namespace TitanBlog.Controllers
 
             return View(comment);
         }
-
+        [AllowAnonymous]
         // GET: Comments/Create
 
         // POST: Comments/Create

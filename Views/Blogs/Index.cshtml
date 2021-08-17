@@ -1,7 +1,10 @@
 ﻿@using TitanBlog.Models
 @using TitanBlog.Services.Interfaces
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
 
-@model IEnumerable<Blog>
+@model IPagedList<Blog>
 @inject IImageService imageservice
 
 @{
@@ -19,16 +22,16 @@
         <tr>
             <th>Image</th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Created)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Created)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Updated)
+                @Html.DisplayNameFor(model => model.FirstOrDefault().Updated)
             </th>
 
             <th></th>
@@ -57,3 +60,24 @@
         }
     </tbody>
 </table>
+
+<div class="row">
+    <div class="col h3">
+        <p> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount </p>
+    </div>
+</div>
+
+<!-- Paged List Core-->
+<div class="row">
+    <div class="col">
+        <nav class="oleez-pagination wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                new PagedListRenderOptions
+                {
+                    LiElementClasses = new string[] { "active" },
+                    PageClasses = new string[] { "oleez-pagination wow" }
+                })
+        </nav>
+    </div>
+</div>

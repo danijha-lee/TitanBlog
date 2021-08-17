@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using TitanBlog.Data;
 using TitanBlog.Models;
 using TitanBlog.Services.Interfaces;
+using X.PagedList;
 
 namespace TitanBlog.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class BlogsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -25,9 +27,17 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Blogs
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? page)
         {
-            return View(await _context.Blogs.ToListAsync());
+            //Using null coalescing (sp) operator
+            var pageNumber = page ?? 1;
+            var pageSize = 2;
+
+            var blogs = await _context.Blogs
+                .OrderByDescending(b => b.Created)
+                .ToPagedListAsync(pageNumber, pageSize);
+
+            return View(blogs);
         }
 
         // GET: Blogs/Details/5

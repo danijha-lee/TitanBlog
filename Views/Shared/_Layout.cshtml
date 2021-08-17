@@ -14,7 +14,7 @@
 <body>
     <header class="oleez-header">
         <nav class="navbar navbar-expand-lg navbar-light">
-            <a class="navbar-brand" href="index.html"><img src="~/img/Logo_2.svg" alt="Oleez"></a>
+            @*<a class="footer-logo" href="index.html"><img src="~/Images/69030601.png" alt="Oleez"></a>*@
             <ul class="nav nav-actions d-lg-none ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" href="#!" data-toggle="searchModal">
@@ -35,34 +35,43 @@
             <div class="collapse navbar-collapse" id="oleezMainNav">
                 <ul class="navbar-nav mx-auto mt-2 mt-lg-0">
                     <li class="nav-item active">
-                        <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Home">Home <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
+                        <a class="nav-link" asp-action="About" asp-controller="Home">About The Author</a>
                     </li>
-
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#!" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blog</a>
-                        <div class="dropdown-menu" aria-labelledby="blogDropdown">
-                            <a class="dropdown-item" href="blog-standard.html">Blog Standard</a>
-                            <a class="dropdown-item" href="blog-grid.html">Blog grid</a>
-                            <a class="dropdown-item" href="blog-single.html">Blog Post</a>
-                        </div>
-                    </li>
-
-                    @if (User.IsInRole("Moderator"))
+                    @if (User.IsInRole("Administrator"))
                     {
-                        <li class="nav-item">
-                            <a asp-controller="Comments" asp-action="Unmoderated">Unmoderated</a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Comments" asp-action="Moderated">Moderated</a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-controller="Comments" asp-action="Deleted">Deleted</a>
-                        </li>
 
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#!" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Blogs</a>
+                            <div class="dropdown-menu" aria-labelledby="blogDropdown">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Blogs">Create A New Blog</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Blogs">View Blogs</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#!" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Posts</a>
+                            <div class="dropdown-menu" aria-labelledby="blogDropdown">
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Posts">Create A New Post</a>
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Posts">View Posts</a>
+                            </div>
+                        </li>
                     }
+
+                    @* @if (User.IsInRole("Moderator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Comments" asp-action="Unmoderated">Unmoderated</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Comments" asp-action="Moderated">Moderated</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Comments" asp-action="Deleted">Deleted</a>
+                            </li>
+
+                        }*@
                 </ul>
                 <partial name="_LoginPartial" />
 
@@ -94,7 +103,7 @@
             <div class="footer-content">
                 <div class="row">
                     <div class="col-md-6">
-                        <img src="~/img/Logo_1.svg" alt="oleez" class="footer-logo">
+                        <img src="~/Images/69030601.png" alt="Brand Logo" class="footer-logo">
                         <p class="footer-intro-text">Don't be shy, get in touch with us and create the world again!</p>
                         <nav class="footer-social-links">
                             <a href="#!">Fb</a>
@@ -107,19 +116,19 @@
                         <div class="row">
                             <div class="col-md-6 footer-widget-text">
                                 <h6 class="widget-title">PHONE</h6>
-                                <p class="widget-content">+80 (0)5 12 34 95 89</p>
+                                <p class="widget-content">(336)-450-8158</p>
                             </div>
                             <div class="col-md-6 footer-widget-text">
-                                <h6 class="widget-title">ENQUIRUES</h6>
-                                <p class="widget-content">info@oleez.site</p>
+                                <h6 class="widget-title">Inquires</h6>
+                                <p class="widget-content">themonae@gmail.com</p>
                             </div>
                             <div class="col-md-6 footer-widget-text">
                                 <h6 class="widget-title">ADDRESS</h6>
-                                <p class="widget-content">33 rue Burdeau 69089 <br> Paris France</p>
+                                <p class="widget-content">Charlotte, Nc</p>
                             </div>
                             <div class="col-md-6 footer-widget-text">
-                                <h6 class="widget-title">WORK HOURS</h6>
-                                <p class="widget-content">Weekdays: 09:00 - 18:00 <br> Weekends: 11:00 - 17:00</p>
+                                <h6 class="widget-title">BHOURS</h6>
+                                <p class="widget-content">Weekdays: 09:00 - 05:00 <br> Weekends: 11:00 - 02:00</p>
                             </div>
                         </div>
                     </div>
@@ -132,6 +141,37 @@
         </div>
     </footer>
 
+    @if (User.IsInRole("Moderator") || (User.IsInRole("Administrator")))
+    {
+        <!-- Modals -->
+        <!-- Off canvas social menu -->
+        <nav id="offCanvasMenu" class="off-canvas-menu">
+            <button type="button" class="close" aria-label="Close" data-dismiss="offCanvasMenu">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <ul class="oleez-social-menu">
+                <li>
+                    <a asp-action="Index" asp-controller="Comments" class="oleez-social-menu-link">All Comments</a>
+                </li>
+                <li>
+                    <a class="oleez-social-menu-link" asp-action="ModeratedIndex" asp-controller="Comments">Moderated Comments</a>
+                </li>
+                <li>
+                    <a asp-action="UnmoderatedIndex" asp-controller="Comments" class="oleez-social-menu-link">Unmoderated Comments</a>
+                </li>
+                <li>
+                    <a asp-action="DeletedIndex" asp-controller="Comments" class="oleez-social-menu-link">Deleted Comments</a>
+                </li>
+
+                <li>
+                    <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
+                </li>
+                <li>
+                    <a asp-action="About" asp-controller="Home" class="oleez-social-menu-link">About The Author</a>
+                </li>
+            </ul>
+        </nav>}
+
     <!-- Modals -->
     <!-- Off canvas social menu -->
     <nav id="offCanvasMenu" class="off-canvas-menu">
@@ -140,22 +180,24 @@
         </button>
         <ul class="oleez-social-menu">
             <li>
-                <a href="#!" class="oleez-social-menu-link">Facebook</a>
+                <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
             </li>
             <li>
-                <a href="#!" class="oleez-social-menu-link">Instagram</a>
+                <a asp-action="About" asp-controller="Home" class="oleez-social-menu-link">About The Author</a>
             </li>
-            <li>
-                <a href="#!" class="oleez-social-menu-link">Behance</a>
-            </li>
-            <li>
-                <a href="#!" class="oleez-social-menu-link">Dribbble</a>
-            </li>
-            <li>
-                <a href="#!" class="oleez-social-menu-link">Email</a>
-            </li>
+
+            @* <li>
+                    <a href="#!" class="oleez-social-menu-link">Behance</a>
+                </li>
+                <li>
+                    <a href="#!" class="oleez-social-menu-link">Dribbble</a>
+                </li>
+                <li>
+                    <a href="#!" class="oleez-social-menu-link">Email</a>
+                </li>*@
         </ul>
     </nav>
+
     <!-- Full screen search box -->
     <div id="searchModal" class="search-modal">
         <button type="button" class="close" aria-label="Close" data-dismiss="searchModal">
