@@ -108,7 +108,7 @@
                                     <span class="post-category">@post.Title</span> 4 min read
                                 </div>
                                 <h5 class="post-title">@post.Abstract</h5>
-                                <a asp-controller="Posts" asp-action="Index" asp-route-postId="@post.Id" class="post-permalink">Read more </a>
+                                <a asp-controller="Posts" asp-action="Details" asp-route-slug="@post.Slug" class="post-permalink">Read more </a>
                             </div>
                         </div>
                     </div>
