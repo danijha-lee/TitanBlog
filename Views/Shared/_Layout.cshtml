@@ -37,8 +37,9 @@
                     <li class="nav-item active">
                         <a class="nav-link" asp-action="Index" asp-controller="Home">Home <span class="sr-only">(current)</span></a>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" asp-action="About" asp-controller="Home">About The Author</a>
+                        <a class="nav-link" asp-action="BlogPostIndex" asp-controller="Posts">About The Author</a>
                     </li>
                     @if (User.IsInRole("Administrator"))
                     {
