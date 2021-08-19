@@ -27,6 +27,7 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Blogs
+        [AllowAnonymous]
         public async Task<IActionResult> Index(int? page)
         {
             //Using null coalescing (sp) operator

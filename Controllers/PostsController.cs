@@ -30,6 +30,7 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Posts
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Posts.Where(p => p.IsReady);
@@ -37,6 +38,7 @@ namespace TitanBlog.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> BlogPostIndex(int? blogId)
         {
             if (blogId is null)
@@ -51,6 +53,7 @@ namespace TitanBlog.Controllers
             return View(posts);
         }
 
+        [AllowAnonymous]
         public IActionResult SearchIndex(string searchStr)
         {
             var posts = _searchService.ContentSearch(searchStr);
@@ -66,7 +69,7 @@ namespace TitanBlog.Controllers
         }
 
         // GET: Posts/Details/5
-        [Authorize(Roles = "Administrator")]
+
         public async Task<IActionResult> Details(string slug)
         {
             if (string.IsNullOrEmpty(slug))

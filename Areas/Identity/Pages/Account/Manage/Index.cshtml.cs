@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TitanBlog.Data;
 using TitanBlog.Models;
 using TitanBlog.Services.Interfaces;
 
@@ -17,19 +18,25 @@ namespace TitanBlog.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<BlogUser> _userManager;
         private readonly SignInManager<BlogUser> _signInManager;
         private readonly IImageService _imageService;
+        private readonly ApplicationDbContext _context;
 
         public IndexModel(
             UserManager<BlogUser> userManager,
-            SignInManager<BlogUser> signInManager, IImageService imageService)
+            SignInManager<BlogUser> signInManager, IImageService imageService, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _imageService = imageService;
+            _context = context;
         }
 
         #region Props
+
         public string Username { get; set; }
         public string CurrentImageData { get; set; }
+
+        public string ImageType { get; set; }
+        public byte[] ImageData { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
@@ -39,7 +46,8 @@ namespace TitanBlog.Areas.Identity.Pages.Account.Manage
 
         [BindProperty]
         public InputModel Input { get; set; }
-        #endregion
+
+        #endregion Props
 
         public class InputModel
         {
@@ -58,6 +66,8 @@ namespace TitanBlog.Areas.Identity.Pages.Account.Manage
 
             Username = userName;
             CurrentImageData = _imageService.DecodeImage(user.ImageData, user.ImageType);
+            ImageType = user.ImageType;
+            ImageData = user.ImageData;
 
             Input = new InputModel
             {
@@ -93,7 +103,6 @@ namespace TitanBlog.Areas.Identity.Pages.Account.Manage
 
             //Make sure the user has selected an approved image type
 
-
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
@@ -104,14 +113,15 @@ namespace TitanBlog.Areas.Identity.Pages.Account.Manage
                     return RedirectToPage();
                 }
             }
-
+            var newImageData = await _imageService.EncodeImageAsync(Input.Image);
             if (Input.Image != null)
             {
                 if (_imageService.IsValidType(Input.Image))
                 {
-                    user.ImageData = await _imageService.EncodeImageAsync(Input.Image);
-                    user.ImageType = _imageService.ContentType(Input.Image);
+                    user.ImageData = newImageData;
+                    user.ImageType = Input.Image.ContentType;
                     await _userManager.UpdateAsync(user);
+                    // await _context.SaveChangesAsync();
                 }
                 else
                 {

@@ -3,44 +3,80 @@
 @model IEnumerable<Blog>
 @inject IImageService imageService
 @inject PostService  postService
+@inject BlogService blogService
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Landing Page";
+    Blog blogOne = new();
+    Blog blogTwo = new();
+    Blog blogThree = new();
+    Blog blogFour = new();
+    int count = 0;
+
+    foreach (var blogTest in Model)
+    {
+        if (count == 4)
+        {
+            break;
+        }
+        else
+        {
+            if (count == 0)
+            {
+                blogOne = blogTest;
+            }
+            else if (count == 1)
+            {
+                blogTwo = blogTest;
+            }
+            else if (count == 2)
+            {
+                blogThree = blogTest;
+            }
+            else if (count == 3)
+            {
+                blogFour = blogTest;
+            }
+        }
+        count++;
+    }
 }
+
+@**@
 
 <section>
     <div class="container wow fadeIn">
         <div id="oleezLandingCarousel" class="oleez-landing-carousel carousel slide" data-ride="carousel">
             <div class="carousel-inner" role="listbox">
                 <div class="carousel-item active">
-                    <img src="~/Images/Woman With Phone In Her Hand.jpg" alt="First slide" class="w-100">
+                    <img src="@imageService.DecodeImage(blogOne.ImageData, blogOne.ImageType)" alt="First slide" class="w-100">
                     <div class="carousel-caption">
-                        <h2 data-animation="animated fadeInRight"><span>CHOOSING A RESPONSIVE</span></h2>
-                        <h2 data-animation="animated fadeInRight"><span>TEMPLATE</span></h2>
-                        <a class="carousel-item-link" data-animation="animated fadeInRight"> READ BLOG</a>
+                        <h2 data-animation="animated fadeInRight"><span>@blogOne.Name</span></h2>
+                        @*<h2 data-animation="animated fadeInRight"><span>TEMPLATE</span></h2>*@
+                        <a class="carousel-item-link" data-animation="animated fadeInRight" asp-controller="Posts" asp-action="BlogPostIndex" asp-route-blogId="@blogOne.Id"> EXPLORE BLOG POST</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="~/Images/Mac Desktop with 4 pics.jpg" alt="Second slide" class="w-100">
+                    <img src="@imageService.DecodeImage(blogTwo.ImageData, blogTwo.ImageType)" alt="Second slide" class="w-100">
                     <div class="carousel-caption">
-                        <h2 data-animation="animated fadeInRight"><span>ADVANTAGES OF USING</span></h2>
-                        <h2 data-animation="animated fadeInRight"><span>MVC</span></h2>
-                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight">READ BLOG</a>
+                        <h2 data-animation="animated fadeInRight"><span>@blogTwo.Name</span></h2>
+                        @*<h2 data-animation="animated fadeInRight"><span>MVC</span></h2>*@
+                        <a class="carousel-item-link" data-animation="animated fadeInRight" data-animation="animated fadeInRight" asp-controller="Posts" asp-action="BlogPostIndex" asp-route-blogId="@blogTwo.Id">EXPLORE BLOG POST</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="~/Images/Mac Desktop, Laptop, tablet.jpg" alt="Third slide" class="w-100">
+                    <img src="@imageService.DecodeImage(blogThree.ImageData, blogThree.ImageType)" alt="Third slide" class="w-100">
                     <div class="carousel-caption">
-                        <h2 data-animation="animated fadeInRight"><span>REMARKABLE</span></h2>
-                        <h2 data-animation="animated fadeInRight"><span>DIGITAL TECHNOLOGY</span></h2>
-                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight">EXPLORE PROJECT</a>
+                        <h2 data-animation="animated fadeInRight"><span>@blogThree.Name</span></h2>
+                        @*<h2 data-animation="animated fadeInRight"><span>DIGITAL TECHNOLOGY</span></h2>*@
+                        <a class="carousel-item-link" data-animation="animated fadeInRight" asp-controller="Posts" asp-action="BlogPostIndex" asp-route-blogId="@blogThree.Id">EXPLORE BLOG POST</a>
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <img src="~/Images/Open Laptop and Tablet.jpg" alt="Fourth slide" class="w-100">
+                    <img src="@imageService.DecodeImage(blogFour.ImageData, blogFour.ImageType)" alt="Fourth slide" class="w-100">
                     <div class="carousel-caption">
-                        <h2 data-animation="animated fadeInRight"><span>MODEL VIEW CONTROLLER</span></h2>
-                        <h2 data-animation="animated fadeInRight"><span>SIMPLIFIED </span></h2>
-                        <a href="#!" class="carousel-item-link" data-animation="animated fadeInRight"> READ BLOG</a>
+                        <h2 data-animation="animated fadeInRight"><span>@blogFour.Name</span></h2>
+                        @*<h2 data-animation="animated fadeInRight"><span>SIMPLIFIED </span></h2>*@
+                        <a class="carousel-item-link" data-animation="animated fadeInRight" asp-controller="Posts" asp-action="BlogPostIndex" asp-route-blogId="@blogFour.Id"> EXPLORE BLOG POST</a>
                     </div>
                 </div>
             </div>
@@ -55,10 +91,10 @@
             </div>
             <div class="row landing-about-content wow fadeInUp">
                 <div class="col-md-6">
-                    <h2>CHECK OUT OUR LATEST BLOG!</h2>
+                    <h2>CHECK OUT OUR LATEST BLOG POSTS!</h2>
                 </div>
                 <div class="col-md-6">
-                    <p>Below are a few of our most recent blog ! Get the scoop on the latest tech topics.</p>
+                    <p>Below are a few of our most recent blog Posts ! Get the scoop on the latest tech topics.</p>
                 </div>
             </div>
 
@@ -87,10 +123,10 @@
     <div class="container">
         <div class="oleez-landing-section-content">
             <div class="oleez-landing-section-verticals wow fadeIn">
-                <span class="number">02</span> <img src="~/Images/69030601.png" alt="ollez" height="12">
+                <span class="number">02</span> < alt="ollez" height="12">
             </div>
             <h2 class="section-title wow fadeInUp">Recent Posts</h2>
-            <p class="news-section-subtitle wow fadeInUp">Take a look at our most popular Blog Posts and share your thoughts in the comments.</p>
+            <p class="news-section-subtitle wow fadeInUp">Have a look at our most popular Blog Posts and share your thoughts in the comments.</p>
             <div class="row">
                 @foreach (var post in await postService.GetIndexPosts())
                 {
