@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TitanBlog</title>
+    <title>@ViewData["Title"] - Titan Blog</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/css/slick.css" rel="stylesheet" />
     <link href="~/css/slick-theme.css" rel="stylesheet" />
@@ -38,9 +38,6 @@
                         <a class="nav-link" asp-action="Index" asp-controller="Home">Home <span class="sr-only">(current)</span></a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" asp-action="BlogPostIndex" asp-controller="Posts">About The Author</a>
-                    </li>
                     @if (User.IsInRole("Administrator"))
                     {
 
@@ -49,6 +46,8 @@
                             <div class="dropdown-menu" aria-labelledby="blogDropdown">
                                 <a class="dropdown-item" asp-action="Create" asp-controller="Blogs">Create A New Blog</a>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Blogs">View Blogs</a>
+                          
+
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -168,7 +167,7 @@
                     <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
                 </li>
                 <li>
-                    <a asp-action="About" asp-controller="Home" class="oleez-social-menu-link">About The Author</a>
+                    <a href="https://dleetitanportfolio.netlify.app" target="_blank" class="oleez-social-menu-link">About The Author</a>
                 </li>
             </ul>
         </nav>}
@@ -184,7 +183,7 @@
                 <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
             </li>
             <li>
-                <a asp-action="About" asp-controller="Home" class="oleez-social-menu-link">About The Author</a>
+                <a href="https://dleetitanportfolio.netlify.app" target="_blank" class="oleez-social-menu-link">About The Author</a>
             </li>
 
             @* <li>

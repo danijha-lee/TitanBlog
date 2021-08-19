@@ -1,6 +1,9 @@
 ﻿@using TitanBlog.Services.Interfaces;
 @model IEnumerable<TitanBlog.Models.Post>
 @inject IImageService imageService
+@{
+    ViewData["Title"] = "Index";
+}
 
 <main class="blog-standard">
     <div class="container">

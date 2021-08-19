@@ -62,6 +62,7 @@ namespace TitanBlog
             //Register our Search Service
             services.AddTransient<SearchService>();
             services.AddTransient<PostService>();
+            services.AddTransient<BlogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

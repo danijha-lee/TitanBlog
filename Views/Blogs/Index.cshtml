@@ -3,6 +3,7 @@
 @using X.PagedList;
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
+@using TitanBlog.Services
 
 @model IPagedList<Blog>
 @inject IImageService imageservice
@@ -12,72 +13,59 @@
 
 }
 
-<h1>Index</h1>
+<main class="blog-grid-page">
+    <div class="container">
+        <h1 class="oleez-page-title wow fadeInUp">BLOGS</h1>
+        <div class="row">
+            @foreach (var blog in Model)
+            {
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Image</th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstOrDefault().Updated)
-            </th>
+                <div class="col-md-4">
+                    <div class="blog-post-card wow fadeInUp">
+                        <h6>@blog.Name</h6>
+                        <div class="blog-post-thumbnail-wrapper">
 
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <img src="@imageservice.DecodeImage(item.ImageData, item.ImageType)" class="img-fluid" />
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
+                            <img src="@imageservice.DecodeImage(blog.ImageData, blog.ImageType)" alt="blog">
+                        </div>
+                        <p class="blog-post-date">@blog.Created</p>
+                        <h5 class="blog-post-title">@blog.Description</h5>
 
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <a class="btn btn-secondary btn-lg mb-2" asp-action="Edit" asp-route-id="@blog.Id">Edit</a>
 
-<div class="row">
-    <div class="col h3">
-        <p> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount </p>
+                            <a class="btn btn-primary btn-lg mb-2" asp-action="Details" asp-route-id="@blog.Id">Details</a>
+
+                            <a class="btn btn-danger btn-lg mb-2" asp-action="Delete" asp-route-id="@blog.Id">Delete</a>
+                            <br />
+                            <a class="btn btn-lg btn-dark btn-block" asp-controller="Posts" asp-action="BlogPostIndex" asp-route-blogId="@blog.Id">LAUNCH BLOG</a>
+
+                        }
+                    </div>
+                </div>
+
+            }
+        </div>
     </div>
-</div>
 
-<!-- Paged List Core-->
-<div class="row">
-    <div class="col">
-        <nav class="oleez-pagination wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
-
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
-                new PagedListRenderOptions
-                {
-                    LiElementClasses = new string[] { "active" },
-                    PageClasses = new string[] { "oleez-pagination wow" }
-                })
-        </nav>
+    <div class="row">
+        <div class="col h3">
+            <p> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount </p>
+        </div>
     </div>
-</div>
+
+    <!-- Paged List Core-->
+    <div class="row">
+        <div class="col">
+            <nav class="oleez-pagination wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                    new PagedListRenderOptions
+                    {
+                        LiElementClasses = new string[] { "active" },
+                        PageClasses = new string[] { "oleez-pagination wow" }
+                    })
+            </nav>
+        </div>
+    </div>
+</main>
