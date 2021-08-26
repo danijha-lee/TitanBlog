@@ -1,16 +1,15 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Titan Blog</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="~/css/slick.css" rel="stylesheet" />
-    <link href="~/css/slick-theme.css" rel="stylesheet" />
-    <link href="~/css/animate.min.css" rel="stylesheet" />
-    <link href="~/css/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>@ViewData["Title"] - Titan Blog</title>
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link href="~/css/slick.css" rel="stylesheet" />
+<link href="~/css/slick-theme.css" rel="stylesheet" />
+<link href="~/css/animate.min.css" rel="stylesheet" />
+<link href="~/css/style.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/css/site.css" />
+
 <body>
     <header class="oleez-header">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -38,7 +37,7 @@
                         <a class="nav-link" asp-action="Index" asp-controller="Home">Home <span class="sr-only">(current)</span></a>
                     </li>
 
-                    @if (User.IsInRole("Administrator"))
+                    @if (User.IsInRole("Administrator") || (User.IsInRole("Administrator")))
                     {
 
                         <li class="nav-item dropdown">
@@ -46,8 +45,6 @@
                             <div class="dropdown-menu" aria-labelledby="blogDropdown">
                                 <a class="dropdown-item" asp-action="Create" asp-controller="Blogs">Create A New Blog</a>
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Blogs">View Blogs</a>
-                          
-
                             </div>
                         </li>
                         <li class="nav-item dropdown">
@@ -57,7 +54,24 @@
                                 <a class="dropdown-item" asp-action="Index" asp-controller="Posts">View Posts</a>
                             </div>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#!" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Comments</a>
+                            <div class="dropdown-menu" aria-labelledby="blogDropdown">
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Comments">View Comments</a>
+                                <a class="dropdown-item" asp-action="ModeratedIndex" asp-controller="Comments">Moderated Comments</a>
+                                <a class="dropdown-item" asp-action="UnmoderatedIndex" asp-controller="Comments">Unmoderated Comments</a>
+                                <a class="dropdown-item" asp-action="DeletedIndex" asp-controller="Comments">Deleted Comments</a>
+                            </div>
+                        </li>
                     }
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#!" id="blogDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Contact</a>
+                        <div class="dropdown-menu" aria-labelledby="blogDropdown">
+                            <a class="dropdown-item" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
+                            <a class="dropdown-item" href="https://dleetitanportfolio.netlify.app" target="_blank">About The Author</a>
+                        </div>
+                    </li>
 
                     @* @if (User.IsInRole("Moderator"))
                         {
@@ -141,8 +155,37 @@
         </div>
     </footer>
 
-    @if (User.IsInRole("Moderator") || (User.IsInRole("Administrator")))
-    {
+    @*  @if (User.IsInRole("Moderator") || (User.IsInRole("Administrator")))
+        {
+            <!-- Modals -->
+            <!-- Off canvas social menu -->
+            <nav id="offCanvasMenu" class="off-canvas-menu">
+                <button type="button" class="close" aria-label="Close" data-dismiss="offCanvasMenu">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <ul class="oleez-social-menu">
+                    <li>
+                        <a asp-action="Index" asp-controller="Comments" class="oleez-social-menu-link">All Comments</a>
+                    </li>
+                    <li>
+                        <a class="oleez-social-menu-link" asp-action="ModeratedIndex" asp-controller="Comments">Moderated Comments</a>
+                    </li>
+                    <li>
+                        <a asp-action="UnmoderatedIndex" asp-controller="Comments" class="oleez-social-menu-link">Unmoderated Comments</a>
+                    </li>
+                    <li>
+                        <a asp-action="DeletedIndex" asp-controller="Comments" class="oleez-social-menu-link">Deleted Comments</a>
+                    </li>
+
+                    <li>
+                        <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
+                    </li>
+                    <li>
+                        <a href="https://dleetitanportfolio.netlify.app" target="_blank" class="oleez-social-menu-link">About The Author</a>
+                    </li>
+                </ul>
+            </nav>}
+
         <!-- Modals -->
         <!-- Off canvas social menu -->
         <nav id="offCanvasMenu" class="off-canvas-menu">
@@ -151,51 +194,22 @@
             </button>
             <ul class="oleez-social-menu">
                 <li>
-                    <a asp-action="Index" asp-controller="Comments" class="oleez-social-menu-link">All Comments</a>
-                </li>
-                <li>
-                    <a class="oleez-social-menu-link" asp-action="ModeratedIndex" asp-controller="Comments">Moderated Comments</a>
-                </li>
-                <li>
-                    <a asp-action="UnmoderatedIndex" asp-controller="Comments" class="oleez-social-menu-link">Unmoderated Comments</a>
-                </li>
-                <li>
-                    <a asp-action="DeletedIndex" asp-controller="Comments" class="oleez-social-menu-link">Deleted Comments</a>
-                </li>
-
-                <li>
                     <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
                 </li>
                 <li>
                     <a href="https://dleetitanportfolio.netlify.app" target="_blank" class="oleez-social-menu-link">About The Author</a>
                 </li>
-            </ul>
-        </nav>}
 
-    <!-- Modals -->
-    <!-- Off canvas social menu -->
-    <nav id="offCanvasMenu" class="off-canvas-menu">
-        <button type="button" class="close" aria-label="Close" data-dismiss="offCanvasMenu">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <ul class="oleez-social-menu">
-            <li>
-                <a class="oleez-social-menu-link" asp-action="ContactMe" asp-controller="Home">Contact Us</a>
-            </li>
-            <li>
-                <a href="https://dleetitanportfolio.netlify.app" target="_blank" class="oleez-social-menu-link">About The Author</a>
-            </li>
-
-            @* <li>
-                    <a href="#!" class="oleez-social-menu-link">Behance</a>
-                </li>
-                <li>
-                    <a href="#!" class="oleez-social-menu-link">Dribbble</a>
-                </li>
-                <li>
-                    <a href="#!" class="oleez-social-menu-link">Email</a>
-                </li>*@
-        </ul>
+                @* <li>
+                        <a href="#!" class="oleez-social-menu-link">Behance</a>
+                    </li>
+                    <li>
+                        <a href="#!" class="oleez-social-menu-link">Dribbble</a>
+                    </li>
+                    <li>
+                        <a href="#!" class="oleez-social-menu-link">Email</a>
+                    </li>*@
+    </ul>
     </nav>
 
     <!-- Full screen search box -->

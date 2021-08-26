@@ -1,4 +1,8 @@
 ﻿@using TitanBlog.Services.Interfaces;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
 @model IEnumerable<TitanBlog.Models.Post>
 @inject IImageService imageService
 @{
@@ -7,7 +11,7 @@
 
 <main class="blog-standard">
     <div class="container">
-        <h1 class="oleez-page-title wow fadeInUp">Blog Standard</h1>
+        <h1 class="oleez-page-title wow fadeInUp">Titan Blog</h1>
         <div class="row">
             <div class="col-md-8">
                 @foreach (var post in Model)
@@ -21,33 +25,46 @@
                         <a asp-action="Details" asp-controller="Posts" asp-route-slug="@post.Slug" class="post-permalink">Read Post</a>
                     </article>
                 }
-                <nav class="oleez-pagination wow fadeInUp">
-                    <a href="#!" class="active">01</a>
-                    <a href="#!">02</a>
-                    <a href="#!">03</a>
-                    <a href="#!" class="next">&rarr;</a>
-                </nav>
+                @* <div class="row">
+                         <div class="col h3">
+                             <p> Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount </p>
+                         </div>
+                     </div>
+
+                    <!-- Paged List Core-->
+                     <div class="row">
+                         <div class="col">
+                             <nav class="oleez-pagination wow fadeInUp" style="visibility: visible; animation-name: fadeInUp;">
+
+                                 @Html.PagedListPager(Model, page => Url.Action("Index", new { page = page }),
+                                     new PagedListRenderOptions
+                                     {
+                                         LiElementClasses = new string[] { "active" },
+                                         PageClasses = new string[] { "oleez-pagination wow" }
+                                     })
+                             </nav>
+                         </div>
+                     </div>*@
             </div>
             <div class="col-md-4">
                 <div class="sidebar-widget wow fadeInUp">
                     <h5 class="widget-title">Tags</h5>
                     <div class="widget-content">
-                        <a href="#!" class="post-tag">Design Studio</a>
-                        <a href="#!" class="post-tag">Creative Design</a>
-                        <a href="#!" class="post-tag">Marketing</a>
-                        <a href="#!" class="post-tag">Typography</a>
-                        <a href="#!" class="post-tag">Team</a>
-                        <a href="#!" class="post-tag">Project</a>
+                        <a asp-action="Index" asp-controller="Posts" class="post-tag">Mvc</a>
+                        <a asp-action="Index" asp-controller="Posts" class="post-tag">Web Development</a>
+                        <a asp-action="Index" asp-controller="Posts" class="post-tag">Technology</a>
+                        <a asp-action="Index" asp-controller="Post" class="post-tag">Templating</a>
+                        <a asp-action="Index" asp-controller="Posts" class="post-tag">Productivity</a>
+                        <a asp-action="Index" asp-controller="Posts" class="post-tag">Projects</a>
                     </div>
                 </div>
                 <div class="sidebar-widget wow fadeInUp">
                     <h5 class="widget-title">Share</h5>
                     <div class="widget-content">
                         <nav class="social-links">
-                            <a href="#!">Fb</a>
-                            <a href="#!">Tw</a>
-                            <a href="#!">In</a>
-                            <a href="#!">Be</a>
+                            <a href="https://www.facebook.com">Fb</a>
+                            <a href=https://www.twitter.com">Tw</a>
+                            <a href="https://www.instagram.com">In</a>
                         </nav>
                     </div>
                 </div>
@@ -55,42 +72,33 @@
                     <h5 class="widget-title">Gallery</h5>
                     <div class="widget-content">
                         <div class="gallery">
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
-                            <a href="~/img/Blogstandard/Blogstandard_2x.jpg" class="gallery-grid-item" data-fancybox="widget-gallery">
-                                <img src="~/img/Blogstandard/Blogstandard_2x.jpg" alt="gallery item">
-                            </a>
+                            <div class="row">
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/AsianPeopleWritingOnBoard.jpg" data-toggle="modal" data-target="#modalOne" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/DesktopsWithCoolLighting.jpg" alt="gallery item" data-toggle="modal" data-target="#modalTwo" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/DesktopWithLaptopBesideAndTimeOnTheScreen.jpg" alt="gallery item" data-toggle="modal" data-target="#modalThree" />
+                            </div>
+                            <div class="row">
+                                <img class="gallery-grid-item img-fluid" src="~/Images/ElectronicHand.jpg" alt="gallery item" data-toggle="modal" data-target="#modalFour" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/LadyHandTwoDesktopsOneLaptop.jpg" alt="gallery item" data-toggle="modal" data-target="#modalFive" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/Mac Desktop with 4 pics.jpg" alt="gallery item" data-toggle="modal" data-target="#modalSix" />
+                            </div>
+                            <div class="row">
+                                <img class="gallery-grid-item img-fluid" src="~/Images/Mac Desktop, Laptop, tablet.jpg" alt="gallery item" data-toggle="modal" data-target="#modalSeven" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/MacbookWithPurpleLightBehind.jpg" alt="gallery item" data-toggle="modal" data-target="#modalEight" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/MacDesktopWithCoffeeInFront.jpg" alt="gallery item" data-toggle="modal" data-target="#modalNine" />
+                            </div>
+                            <div class="row">
+                                <img class="gallery-grid-item img-fluid" src="~/Images/MacDesktopWithKeyboardInFront.jpg" alt="gallery item" data-toggle="modal" data-target="#modalTen" />
+
+                                <img class="gallery-grid-item img-fluid" src="~/Images/Open Laptop and Tablet.jpg" alt="gallery item" data-toggle="modal" data-target="#modalEleven" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -98,11 +106,11 @@
                     <h5 class="widget-title">Categories</h5>
                     <div class="widget-content">
                         <ul class="category-list">
-                            <li><a href="#!">Animation</a></li>
-                            <li><a href="#!">Branding</a></li>
-                            <li><a href="#!">Graphic Design</a></li>
-                            <li><a href="#!">Photography</a></li>
-                            <li><a href="#!">Web Developing</a></li>
+                            <li><a asp-action="Index" asp-controller="Posts">Design Studio</a></li>
+                            <li><a asp-action="Index" asp-controller="Posts"></a>Creative Design</li>
+                            <li><a asp-action="Index" asp-controller="Posts"></a>Marketing</li>
+                            <li><a asp-action="Index" asp-controller="Posts"></a>Typography
+                            <li><a asp-action="Index" asp-controller="Posts"></a>Project</li>
                         </ul>
                     </div>
                 </div>
@@ -110,3 +118,202 @@
         </div>
     </div>
 </main>
+<script src="js/popper.min.js"></script>
+<script src="js/wow.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    new WOW().init();
+</script>
+
+@*------------------------------------MODALS FOR GALLERY-------------------------->*@
+
+@*<----------MODAL ONE--------------------->*@
+
+<div class="modal" tabindex="-1" id="modalOne">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/AsianPeopleWritingOnBoard.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL TWO----------------->*@
+<div class="modal" tabindex="-1" id="modalTwo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/DesktopsWithCoolLighting.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL THREE----------------->*@
+<div class="modal" tabindex="-1" id="modalThree">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/DesktopWithLaptopBesideAndTimeOnTheScreen.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL FOUR----------------->*@
+<div class="modal" tabindex="-1" id="modalFour">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/ElectronicHand.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL FIVE----------------->*@
+<div class="modal" tabindex="-1" id="modalFive">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/LadyHandTwoDesktopsOneLaptop.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL SIX----------------->*@
+<div class="modal" tabindex="-1" id="modalSix">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/MacDesktopwith4pics.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL SEVEN----------------->*@
+<div class="modal" tabindex="-1" id="modalSeven">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/MacDesktopLaptoptablet.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL EIGHT----------------->*@
+<div class="modal" tabindex="-1" id="modalEight">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/MacbookWithPurpleLightBehind.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL NINE----------------->*@
+<div class="modal" tabindex="-1" id="modalNine">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/MacDesktopWithCoffeeInFront.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL TEN----------------->*@
+<div class="modal" tabindex="-1" id="modalTen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/MacDesktopWithKeyboardInFront.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@*---------------------MODAL ELEVEN----------------->*@
+<div class="modal" tabindex="-1" id="modalEleven">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img class="img-fluid" src="~/Images/Open Laptop and Tablet.jpg" alt="gallery item" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
