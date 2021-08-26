@@ -17,7 +17,7 @@ namespace TitanBlog.Services
             _context = context;
         }
 
-        public async Task<List<Blog>> GetIndexPosts()
+        public async Task<List<Blog>> GetIndexBlogs()
         {
             return await _context.Blogs.OrderByDescending(p => p.Created).ToListAsync();
         }
